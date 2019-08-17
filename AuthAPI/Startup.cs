@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac;
-using Autofac.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +14,9 @@ namespace AuthAPI
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration, IHostingEnvironment env)
+		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(env.ContentRootPath)
-				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-				.AddEnvironmentVariables();
-			this.Configuration = builder.Build();
 		}
 
 		public IConfiguration Configuration { get; }
@@ -33,11 +25,6 @@ namespace AuthAPI
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-		}
-
-		public void ConfigureContainer(ContainerBuilder builder)
-		{
-			builder.RegisterModule(new AutofacModule());
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
