@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,24 @@ namespace AuthAPI
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 				.AddControllersAsServices();
+
+			services.AddIdentity<AppUser, IdentityRole>()
+				.AddEntityFrameworkStores<AppIdentityDbContext>()
+				.AddDefaultTokenProviders();
+
+			services.AddIdentityServer().AddDeveloperSigningCredential()
+				// this adds the operational data from DB (codes, tokens, consents)
+				.AddOperationalStore(options =>
+				{
+					options.ConfigureDbContext = connectionBuilder => connectionBuilder.UseSqlServer(Configuration.GetConnectionString("Default"));
+					// this enables automatic token cleanup. this is optional.
+					options.EnableTokenCleanup = true;
+					options.TokenCleanupInterval = 30; // interval in seconds
+				})
+				.AddInMemoryIdentityResources(Config.GetIdentityResources())
+				.AddInMemoryApiResources(Config.GetApiResources())
+				.AddInMemoryClients(Config.GetClients())
+				.AddAspNetIdentity<AppUser>();
 
 			// Create the container builder.
 			var builder = new ContainerBuilder();
