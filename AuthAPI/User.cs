@@ -1,6 +1,6 @@
 ﻿namespace AuthAPI
 {
-	internal class AppUser
+	internal class User
 	{
 	}
 }

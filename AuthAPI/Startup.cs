@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -39,11 +40,12 @@ namespace AuthAPI
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 				.AddControllersAsServices();
 
-			services.AddIdentity<AppUser, IdentityRole>()
+			services.AddIdentity<User, IdentityRole>()
 				.AddEntityFrameworkStores<AppIdentityDbContext>()
 				.AddDefaultTokenProviders();
 
-			services.AddIdentityServer().AddDeveloperSigningCredential()
+			services.AddIdentityServer()
+				.AddDeveloperSigningCredential()
 				// this adds the operational data from DB (codes, tokens, consents)
 				.AddOperationalStore(options =>
 				{
@@ -55,7 +57,7 @@ namespace AuthAPI
 				.AddInMemoryIdentityResources(Config.GetIdentityResources())
 				.AddInMemoryApiResources(Config.GetApiResources())
 				.AddInMemoryClients(Config.GetClients())
-				.AddAspNetIdentity<AppUser>();
+				.AddAspNetIdentity<User>();
 
 			// Create the container builder.
 			var builder = new ContainerBuilder();
