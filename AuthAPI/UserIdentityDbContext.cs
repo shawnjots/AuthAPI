@@ -2,7 +2,7 @@
 
 namespace AuthAPI
 {
-	public class AppIdentityDbContext : DbContext
+	public class UserIdentityDbContext : DbContext
 	{
 	}
 }

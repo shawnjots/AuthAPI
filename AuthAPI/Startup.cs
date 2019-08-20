@@ -41,7 +41,7 @@ namespace AuthAPI
 				.AddControllersAsServices();
 
 			services.AddIdentity<User, IdentityRole>()
-				.AddEntityFrameworkStores<AppIdentityDbContext>()
+				.AddEntityFrameworkStores<UserIdentityDbContext>()
 				.AddDefaultTokenProviders();
 
 			services.AddIdentityServer()
